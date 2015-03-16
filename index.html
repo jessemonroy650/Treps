@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv=content-type content="text/html; charset=utf8">
+	<title>Treps</title>
+	<!-- HTML5 start -->
+	<meta name="viewport" content="width=device-width" />
+    <link rel='stylesheet' type='text/css' href='css/default.css'>
+    <link rel='stylesheet' type='text/css' href='css/header.css'>
+    <link rel='stylesheet' type='text/css' href='css/buttons.css'>
+    <link rel='stylesheet' type='text/css' href='css/treps.css'>
+	<style>
+	</style
+	<!-- HTML5 end-->
+    <script type="text/javascript" charset="utf-8" src="js/firebase-2.2.1.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/zepto-1.1.6.js"></script>
+	<script type="text/javascript" charset="utf-8" src='js/fastclick.js'></script>
+	<script>
+	if ('addEventListener' in document) {
+    	document.addEventListener('DOMContentLoaded', function() {
+        	FastClick.attach(document.body);
+	    }, false);
+	}
+	</script>
+</head>
+<body>
+	<div id=title class=title><img id=icon src=fullcontact-stacked-solid-white.png>&nbsp;Treps</div>
+    <div id=header>
+		<div id='myhandle' class='boxy' style=''>
+			real&nbsp;name:&nbsp;<span id=realname></span> | email:&nbsp;<span id=email></span> | twitterhandle:&nbsp;<span id=twitterhandle></span>
+		</div>
+		<div id='wrapper_lookup' class='boxy' style=''>
+			<input id=lookup type=text>&nbsp;
+			<button id=lookupbutton class="button glow button-caution" >Lookup a Trep</button>&nbsp;
+			<button id=getTrep class="button glow button-action" >Get Trep List</button>&nbsp;
+		</div>
+		<div id='output' class='boxy' style=''>
+			<div id=image></div>
+		</div>
+		<div id=treps style=''>
+		</div>
+    </div>
+
+
+	<div id=mycontent></div>
+
+	<div class=footer-spacer></div>
+	<div id="footer" class="footer">
+		<span id=copyright>Copyright 2015 by Jesse Monroy</span>
+	</div>
+    <script>
+		//
+		// Unit Data hooks
+		//
+      	var myInfoRef  = new Firebase('https://treps.firebaseio.com/user/user-info');
+      	var myTrepsRef = new Firebase('https://treps.firebaseio.com/user/treps-list');
+
+		myInfoRef.set({'realname':'Jesse Monroy',
+						'email':'jesse650@gmail.com',
+						'twitterhandle':'@jessemonroy',
+					});
+
+		myInfoRef.on('value', function(snapshot) {
+			var info = snapshot.val();
+			console.log(info);
+			displayInfo('#realname', info.realname);
+			displayInfo('#email', info.email);
+			displayInfo('#twitterhandle', info.twitterhandle);
+		});
+
+		function displayInfo(name, value) {
+        	//console.log('name:' + name)
+			$(name).text(value);
+		};
+
+		function displayListItem(url, title) {
+			//console.log('url:' + url);
+			//console.log('title:' + title);
+			$('#treps').append('<a href="' + url + '">' + title + '</a><br>');
+		};
+		//
+		//
+		//
+		function getFullContact(contact) {
+			console.log('contact:' + contact);
+			var url  = '';
+			var rgex1 = /^@/; // if the string starts with an @
+			var rgex2 = /@/; //  if the string contains a @
+			if (contact.match(rgex1)) {
+				url = 'https://api.fullcontact.com/v2/person.json?twitter=' + contact + '&apiKey=9ca495c39270a54d'
+			} else if (contact.match(rgex2)) {
+				url = 'https://api.fullcontact.com/v2/person.json?email=' + contact + '&apiKey=9ca495c39270a54d'
+			}
+			console.log('url:' + url);
+			$.get(url,
+				function(data) {
+					var status = data.status;
+					console.log('status:' + status);
+					var outstring = '';
+					var otherInfo = {};
+					otherInfo['contact'] = contact;
+					//console.log(JSON.stringify(data));
+					if (data.photos) {
+						outstring += '<img src=' + data.photos[0].url + '><br>';
+						otherInfo['photo'] = data.photos[0].url;
+					}
+					if (data.contactInfo) {
+						outstring += data.contactInfo.fullName + '<br>';
+						otherInfo['fullName'] = data.contactInfo.fullName;
+					}
+					if (data.demographics) {
+						outstring += data.demographics.locationDeduced.deducedLocation  + '<br>';
+						otherInfo['demographics'] = data.demographics.locationDeduced.deducedLocation;
+					}
+					if (data.socialProfiles) {
+						for (i = 0; i < data.socialProfiles.length; i++) {
+							if (i > 0) {
+								outstring += ', ';
+							}
+							outstring += '<a href=' + data.socialProfiles[i].url + '>' + data.socialProfiles[i].typeName + '</a>';
+						}
+					}
+					myTrepsRef.push({'contact': contact, 'otherInfo': otherInfo});
+					//console.log(JSON.stringify('otherInfo:' + JSON.stringify(otherInfo)));
+					if (outstring) {
+						$('#image').html(outstring);
+					} else {
+						// https://www.fullcontact.com/developer/docs/#response-codes
+						var additionalInfo = '';
+						switch (status) {
+							case 202:
+								additionalInfo = 'Your request is currently being processed. Check back in a few hours.';
+							break;
+							case 400:
+								additionalInfo = 'Your request was malformed.';
+							break;
+							case 404:
+								additionalInfo = 'This identity was searched for in the past 24 hours and nothing was found.';
+							break;
+							default:
+								additionalInfo = "We don't know what happened.";
+							break;
+						}
+						$('#image').html('status:' + status + ' ' + additionalInfo);
+					}
+			}).fail(function() {
+				//alert(contact + " failed");
+                $('#image').html(contact + " failed.");
+			});
+		}
+		$('#lookup').keydown( function (e) {
+			//console.log("keydown");
+			var key = e.which;
+			if (key == 13) {
+				// As ASCII code for ENTER key is "13"
+				$('#lookupbutton').click();
+			}
+		});
+		//
+		$('#lookupbutton').click( function () {
+			var c = $('#lookup').val();
+			//console.log(c);
+			getFullContact(c);
+		});
+		//
+		$('#getTrep').click( function () {
+			console.log('#getTrep');
+			myTrepsRef.orderByKey().once("value", function (data) {
+				var theList = "";
+				var d = data.val();
+				for ( x in  d) {
+					xyz = "c:" + d[x].contact
+					console.log( xyz );
+					theList += xyz + "\n";
+				}
+				$('#treps').html('<pre>' + theList + '</pre>');
+			});
+		});
+
+    </script>
+
+</body>
+</html>
