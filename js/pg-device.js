@@ -1,11 +1,11 @@
 //
 //
 //
-var pgGetDeviceInfo = function () {
+function pgGetDeviceInfo() {
 	document.getElementById('deviceInformation').innerHTML = pgDeviceInfo();
 };
 
-var pgDeviceInfo = function () {
+function pgDeviceInfo() {
 	return device.cordova + '<br />' +
 			device.model + '<br />' +
 			device.platform + '<br />' +

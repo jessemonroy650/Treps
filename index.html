@@ -16,6 +16,7 @@
     <script type="text/javascript" charset="utf-8" src="js/zepto-1.1.6.js"></script>
 	<script type="text/javascript" charset="utf-8" src='js/fastclick.js'></script>
 	<script type="text/javascript" charset="utf-8" src='js/pg-device.js'></script>
+	<script type="text/javascript" charset="utf-8" src='js/pg-contact.js'></script>
 	<script>
 	// Add fastclick to remove the 300ms delay
 	if ('addEventListener' in document) {
@@ -166,6 +167,9 @@
                 $('#image').html(contact + " failed.");
 			});
 		}
+		//
+		//	UI (User Interface) stuff
+		//
 		$('#lookup').keydown( function (e) {
 			//console.log("keydown");
 			var key = e.which;
@@ -200,7 +204,7 @@
 		});
 		//
 		$('#getContactInfo').click( function () {
-			getContacts();
+			pgGetContactInfo();
 		});
 
     </script>

@@ -1,16 +1,16 @@
 //
 //
 //
-var onSuccessContact = function (contacts) {
-    //alert('Found ' + contacts.length + ' contacts.');
+function onSuccessContact(contacts) {
+    alert('Found ' + contacts.length + ' contacts.');
 	document.getElementById('contactInformation').innerHTML = JSON.stringify(contacts, null, 4);
 };
 
-var onErrorContact = function (contactError) {
+function onErrorContact(contactError) {
 	alert('onError!');
 };
 
-var getContacts = function() {
+function pgGetContactInfo() {
 
 	// find all contacts with 'me' in any name field
 	var options      = new ContactFindOptions();
