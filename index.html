@@ -17,6 +17,7 @@
 	<script type="text/javascript" charset="utf-8" src='js/fastclick.js'></script>
 	<script type="text/javascript" charset="utf-8" src='js/pg-device.js'></script>
 	<script type="text/javascript" charset="utf-8" src='js/pg-contact.js'></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 	<script>
 	// Add fastclick to remove the 300ms delay
 	if ('addEventListener' in document) {
@@ -28,8 +29,6 @@
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
 		//
-			pgGetDeviceInfo();
-			pgGetContactInfo();
 	}
 	//
 	function onLoad() {
