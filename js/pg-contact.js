@@ -2,7 +2,7 @@
 //
 //
 function onSuccessContact(contacts) {
-    alert('Found ' + contacts.length + ' contacts.');
+    //alert('Found ' + contacts.length + ' contacts.');
 	document.getElementById('contactInformation').innerHTML = JSON.stringify(contacts, null, 4);
 };
 
