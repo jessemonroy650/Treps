@@ -15,38 +15,56 @@
     <script type="text/javascript" charset="utf-8" src="js/firebase-2.2.1.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/zepto-1.1.6.js"></script>
 	<script type="text/javascript" charset="utf-8" src='js/fastclick.js'></script>
+	<script type="text/javascript" charset="utf-8" src='js/pg-device.js'></script>
 	<script>
+	// Add fastclick to remove the 300ms delay
 	if ('addEventListener' in document) {
     	document.addEventListener('DOMContentLoaded', function() {
         	FastClick.attach(document.body);
 	    }, false);
 	}
+	///
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+		//
+	}
+	//
+	function onLoad() {
+		//
+	}
 	</script>
 </head>
-<body>
-	<div id=title class=title><img id=icon src=fullcontact-stacked-solid-white.png>&nbsp;Treps</div>
+<body onload="onLoad()">
+	<div id=title class=title>
+		<img id=icon src=fullcontact-stacked-solid-white.png>&nbsp;Treps
+	</div>
     <div id=header>
 		<div id='myhandle' class='boxy' style=''>
 			real&nbsp;name:&nbsp;<span id=realname></span> | email:&nbsp;<span id=email></span> | twitterhandle:&nbsp;<span id=twitterhandle></span>
 		</div>
-		<div id='wrapper_lookup' class='boxy' style=''>
-			<input id=lookup type=text>&nbsp;
-			<button id=lookupbutton class="button glow button-caution" >Lookup a Trep</button>&nbsp;
-			<button id=getTrep class="button glow button-action" >Get Trep List</button>&nbsp;
-		</div>
-		<div id='output' class='boxy' style=''>
-			<div id=image></div>
-		</div>
-		<div id=treps style=''>
-		</div>
     </div>
+	<div id='wrapper_lookup' class='boxy' style=''>
+		<input id=lookup type=text>&nbsp;
+		<button id=lookupbutton class="button glow button-caution" >Lookup a Trep</button>&nbsp;
+		<button id=getTrep class="button glow button-action" >Get Trep List</button>&nbsp;
+	</div>
+	<div id='output' class='boxy' style=''>
+		<div id=image></div>
+	</div>
+	<div id=treps style=''>
+	</div>
+	<div id=deviceInformation>
+	</div>
+	<div ><pre id=contactInformation></pre>
+	</div>
 
-
-	<div id=mycontent></div>
-
+	<div style="margin:0 5%;" >
+		<button id=getDeviceInfo class="button glow button-action" >Device Info</button>
+		<button id=getContactInfo class="button glow button-action" >Contact Info</button>
+	</div>
 	<div class=footer-spacer></div>
 	<div id="footer" class="footer">
-		<span id=copyright>Copyright 2015 by Jesse Monroy</span>
+		<span id=copyright>Copyright 2015 by Jesse Monroy, Jr.</span>
 	</div>
     <script>
 		//
@@ -175,6 +193,14 @@
 				}
 				$('#treps').html('<pre>' + theList + '</pre>');
 			});
+		});
+		//
+		$('#getDeviceInfo').click( function () {
+			pgGetDeviceInfo();
+		});
+		//
+		$('#getContactInfo').click( function () {
+			getContacts();
 		});
 
     </script>

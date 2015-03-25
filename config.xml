@@ -16,6 +16,4 @@
         <preference name="permissions" value="none"/>
 		<gap:plugin name="org.apache.cordova.contacts" />
 		<gap:plugin name="org.apache.cordova.device" />
-		<gap:plugin name="org.apache.cordova.network-information" />
-		<gap:plugin name="org.apache.cordova.splashscreen" />
     </widget>
