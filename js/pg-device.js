@@ -6,9 +6,9 @@ function pgGetDeviceInfo() {
 };
 
 function pgDeviceInfo() {
-	return device.cordova + '<br />' +
-			device.model + '<br />' +
-			device.platform + '<br />' +
-			device.uuid + '<br />' +
-			device.version;
+	return 'Version: ' + device.cordova + '<br />' +
+			'Model: ' + device.model + '<br />' +
+			'Platform: ' + device.platform + '<br />' +
+			'UUID: ' + device.uuid + '<br />' +
+			'Platform Version: ' + device.version;
 };
